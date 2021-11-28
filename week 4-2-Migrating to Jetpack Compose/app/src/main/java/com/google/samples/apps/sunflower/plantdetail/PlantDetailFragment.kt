@@ -21,6 +21,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ShareCompat
 import androidx.core.widget.NestedScrollView
@@ -29,6 +31,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.samples.apps.sunflower.R
@@ -106,6 +109,33 @@ class PlantDetailFragment : Fragment() {
                     else -> false
                 }
             }
+
+//            composeView.setContent {
+//                MaterialTheme {
+//                    PlantDetailDescription(plantDetailViewModel)
+//                }
+//            }
+            composeView.apply {
+                // Dispose the Composition when the view's LifecycleOwner
+                // is destroyed
+                setViewCompositionStrategy(
+                    //ViewCompositionStrategy에는 3가지 종류가 존재
+                    //1) DisposeOnDetachedFromWindow -> default
+                    //2) DisposeOnLifecycleDestroyed -> life cycle이 끝나면 composable삭제 (life cycle owner를 알아야함)
+                    //3) DisposeOnViewTreeLifecycleDestroyed -> compose가 붙어있는 view가 destroy될때 삭제(life cycle owner를 모를떄)
+                    ViewCompositionStrategy
+                        .DisposeOnViewTreeLifecycleDestroyed
+                )
+                setContent {
+//                    MaterialTheme {
+//                        PlantDetailDescription(plantDetailViewModel)
+//                    }
+                    MdcTheme {
+                        PlantDetailDescription(plantDetailViewModel)
+                    }
+                }
+            }
+
         }
         setHasOptionsMenu(true)
 
